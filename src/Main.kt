@@ -203,4 +203,42 @@ object Main {
         val r = maxDepth(root.right)
         return Math.max(l, r) + 1
     }
+
+    /**
+     *删除链表的倒数第N个节点 https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/
+     */
+    fun removeNthFromEnd(head: ListNode?, n: Int): ListNode? {
+        if (head == null) return null
+        var nodeToDelete: ListNode? = head
+        var nodeToDeletePre: ListNode? = head
+        var h = head
+        var index = 0
+
+        while (h != null) {
+            if (index < n + 1) {
+            } else {
+                nodeToDeletePre = nodeToDeletePre?.next
+            }
+            if (index < n) {
+            } else {
+                nodeToDelete = nodeToDelete?.next
+            }
+            index++
+            h = h.next
+
+        }
+        if (index == 1) return null
+        if (index == 2) {
+            if (n == 1) {
+                head.next = null
+                return head
+            } else {
+                return head.next
+            }
+        }
+        if (nodeToDeletePre == head && nodeToDelete == head) return head.next
+        if (nodeToDeletePre == null) return nodeToDelete?.next
+        nodeToDeletePre.next = nodeToDeletePre.next?.next
+        return head
+    }
 }
