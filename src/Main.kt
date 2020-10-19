@@ -3,18 +3,6 @@ import kotlin.collections.HashSet
 import kotlin.math.max
 
 object Main {
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val l1 = ListNode(1).also { it.next = ListNode(3).also { it.next = ListNode(5) } }
-        val l2 = ListNode(2).also { it.next = ListNode(4).also { it.next = ListNode(6) } }
-        println(mergeTwoLists(l1, l2).also {
-            var v = it
-            while (v != null) {
-                println(v.`val`)
-                v = v.next
-            }
-        })
-    }
 
     /**
      *整数反转 https://leetcode-cn.com/problems/reverse-integer/
@@ -240,5 +228,135 @@ object Main {
         if (nodeToDeletePre == null) return nodeToDelete?.next
         nodeToDeletePre.next = nodeToDeletePre.next?.next
         return head
+    }
+
+
+    /**
+     * x 的平方根 二分查找 https://leetcode-cn.com/problems/sqrtx/
+     */
+    fun mySqrt(x: Int): Int {
+        if (x == 1) return 1
+        var low = 1
+        var high = x
+        var mid: Int = ((high + low) / 2).toInt()
+        while (low < high) {
+            if (mid.toLong() * mid <= x && (mid + 1).toLong() * (mid + 1) > x) return mid
+            if (mid.toLong() * mid <= x) {
+                low = mid + 1
+            } else {
+                high = mid - 1
+            }
+            mid = (high + low) / 2
+        }
+        return mid
+    }
+
+    /**
+     * 二叉树的中序遍历 https://leetcode-cn.com/problems/binary-tree-inorder-traversal/
+     */
+
+    fun inorderTraversal(root: TreeNode?): List<Int> {
+        val list = ArrayList<Int>()
+        if (root == null) return list
+        inorder(list, root)
+        return list
+    }
+
+    fun inorder(list: ArrayList<Int>, node: TreeNode?) {
+        if (node == null) return
+        inorder(list, node?.left)
+        list.add(node.`val`)
+        inorder(list, node?.right)
+    }
+
+    /**
+     * 二叉搜索树的最小绝对差  https://leetcode-cn.com/problems/minimum-absolute-difference-in-bst/
+     */
+
+    var result = 0
+    var pre = -1
+
+    fun getMinimumDifference(root: TreeNode?): Int {
+        if (root == null) return Int.MAX_VALUE
+        dfs2(result, root)
+        return result
+    }
+
+    fun dfs2(v: Int, node: TreeNode?) {
+        if (node == null) return
+        dfs2(v, node?.left)
+        if (pre == -1) {
+            pre = node.`val`
+        } else {
+            result = Math.min(result, Math.abs(node.`val` - pre))
+            pre = node.`val`
+        }
+        dfs2(v, node?.right)
+    }
+
+    /**
+     * 118. 杨辉三角 https://leetcode-cn.com/problems/pascals-triangle/
+     */
+    fun generate(numRows: Int): List<List<Int>> {
+        val result = ArrayList<List<Int>>()
+        if (numRows == 0) return result
+        result.add(arrayListOf(1))
+        for (i in 1 until numRows) {
+            if (i == 1) {
+                result.add(arrayListOf(1, 1))
+            } else {
+                val pre = result.get(i - 1)
+                val newList = ArrayList<Int>()
+                for (j in 0 until pre.size + 1) {
+                    if (j == 0) {
+                        newList.add(1)
+                    } else if (j == pre.size) {
+                        newList.add(1)
+                    } else {
+                        newList.add(pre[j] + pre[j - 1])
+                    }
+                }
+                result.add(newList)
+            }
+        }
+        return result
+    }
+
+    /**
+     *844. 比较含退格的字符串 https://leetcode-cn.com/problems/backspace-string-compare/
+     */
+
+    fun backspaceCompare(S: String, T: String): Boolean {
+        if (S.isNullOrEmpty() || T.isNullOrEmpty()) return true
+        val sStack = Stack<Char>()
+        val tStack = Stack<Char>()
+        fun doSome(string: String, stack: Stack<Char>) {
+            for (s in string) {
+                if (s == '#') {
+                    if (!stack.isEmpty())
+                        stack.pop()
+                } else {
+                    stack.push(s)
+                }
+            }
+        }
+        doSome(S, sStack)
+        doSome(T, tStack)
+        while (!sStack.isEmpty() && !tStack.isEmpty()) {
+            if (sStack.pop() != tStack.pop()) {
+                return false
+            }
+        }
+        if (!sStack.isEmpty() || !tStack.isEmpty()) return false
+        return true
+    }
+
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        println(backspaceCompare("ab#c", "ad#c"))
+        println(backspaceCompare("ab##", "c#d#"))
+        println(backspaceCompare("a##c", "#a#c"))
+        println(backspaceCompare("a#c", "b"))
     }
 }
