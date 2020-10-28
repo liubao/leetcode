@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 import kotlin.math.max
 
@@ -324,6 +325,11 @@ object Main {
 
     /**
      *844. 比较含退格的字符串 https://leetcode-cn.com/problems/backspace-string-compare/
+     *
+    println(backspaceCompare("ab#c", "ad#c"))
+    println(backspaceCompare("ab##", "c#d#"))
+    println(backspaceCompare("a##c", "#a#c"))
+    println(backspaceCompare("a#c", "b"))
      */
 
     fun backspaceCompare(S: String, T: String): Boolean {
@@ -351,12 +357,50 @@ object Main {
         return true
     }
 
+    /**
+     *1365. 有多少小于当前数字的数字
+     */
+
+    fun smallerNumbersThanCurrent(nums: IntArray): IntArray {
+        val result = IntArray(nums.size)
+        nums.forEachIndexed { index, i ->
+            var count = 0
+            nums.forEachIndexed { indexIn, j ->
+                if (j < i) {
+                    count++
+                }
+            }
+            result[index] = count
+        }
+        return result
+    }
+
+    /**
+     *1207. 独一无二的出现次数
+     */
+
+    fun uniqueOccurrences(arr: IntArray): Boolean {
+        if (arr.isEmpty()) return true
+        val map = HashMap<Int, Int>()
+        arr.forEach {
+            if (it in map) {
+                map.put(it, map.get(it)!! + 1)
+            } else {
+                map.put(it, 0)
+            }
+        }
+        val set = HashSet<Int>()
+        map.forEach {
+            if (set.add(it.value) == false) {
+                return false
+            }
+        }
+        return true
+    }
+
 
     @JvmStatic
     fun main(args: Array<String>) {
-        println(backspaceCompare("ab#c", "ad#c"))
-        println(backspaceCompare("ab##", "c#d#"))
-        println(backspaceCompare("a##c", "#a#c"))
-        println(backspaceCompare("a#c", "b"))
+        println(uniqueOccurrences(intArrayOf(8, 1, 2, 2, 8, 8)))
     }
 }
